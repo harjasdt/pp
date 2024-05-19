@@ -246,7 +246,7 @@ def parsing_section_experience():
 
         helper_skill_llm('Experience\n')
         return helper_json_llm('Experience\n','''employment history divided by companies, only provide a  compliant JSON response  following this format.
-    {
+    {{
         "GeoLocation": location as provided in the following format.
                         {"city": city name,
                         "country": country name,
@@ -256,15 +256,9 @@ def parsing_section_experience():
         "Start_Date": start date,
         "End_Date": end date,
         "span": duration spent in this position,
-        "responsibilities": list of responsibilities,
-        "Skills": list all the acquired skills from the responsibilities of the current subsection only. do not include any other data.
-                         present only the name of the skills in the following format. 
-                        {
-                        "Skill Count":"serial number,
-                        "SkillName":"the actual skill name"
-
-                         }
-    }''')
+        "responsibilities": "the orignal description of the given experience",
+        
+    }}''')
 
 def parsing_section_profile():
     if('Profile' in json_object):
@@ -336,7 +330,7 @@ def parsing_section_main():
     # parsing_section_education()
     # parsing_section_interests()
     parsing_section_skills()
-    # parsing_section_summary()
+    parsing_section_summary()
     with open('./data/processed/data.json', 'w') as f:
         json.dump(json_object, f, indent=4, sort_keys=False)
 

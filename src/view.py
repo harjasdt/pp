@@ -77,51 +77,6 @@ def sentence_to_glove(sentence, model, dim=100, aggregate='mean'):
 # print(emb2)
 
 
-def visulize():
-
-
-    if(m.skills):
-        print("loading embeddings")
-        glove_model = load_glove_vectors('./glove.6B.100d.txt')
-        # dic
-        emb2=[]
-        print("inside loop")
-        for i in m.skills:
-          x=sentence_to_glove(i, glove_model)
-          emb2.append(x)
-        emb2=np.mean(emb2,axis=0)
-        # emb2
-        
-        # st.write(emb2)
-        
-        # Calculate cosine similarity
-        result={}
-        for i in dic.dic:
-          similarity_score = cosine_similarity(emb2.reshape(1, -1),dic.dic[i].reshape(1, -1))[0][0]
-          result[i]=similarity_score
-
-        sorted_dict = dict(sorted(result.items(), key=lambda item: item[1],reverse=True))
-
-        st.write(sorted_dict )
-        data=sorted_dict
-
-
-        # Data for pie chart
-        labels = list(data.keys())
-        sizes = list(data.values())
-
-        # Plotting the pie chart
-        fig, ax = plt.subplots(figsize=(10, 8))
-        ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140)
-        ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
-        # Title
-        ax.set_title('Industry Distribution')
-
-        # Display the pie chart in Streamlit
-        st.title('Industry Distribution Pie Chart')
-        st.pyplot(fig)
-
 
 def vizu():
     skills=[]
