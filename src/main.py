@@ -27,10 +27,10 @@ warnings.filterwarnings('ignore')
 # Load environment variables from the .env file
 load_dotenv(".env")
 import tiktoken
-
+from langchain_community.llms import Ollama
 # Initialize an empty list to store extracted skills
 global skills 
-skills=[]
+skills="[list of all the skills from this category present in the input]"
 
 
 # Create an empty container for dynamic content
@@ -42,12 +42,13 @@ global existing_content
 existing_content='--------------LOGS HERE-------------------'
 # Function to update the content of the container
 def update_content(i):
-    global existing_content
-    # Append new content to existing content
-    new_content = f"--> {i}\n"
-    existing_content = new_content +'\n'+ existing_content
+    pass
+    # global existing_content
+    # # Append new content to existing content
+    # new_content = f"--> {i}\n"
+    # existing_content = new_content +'\n'+ existing_content
     
-    container.markdown(f"<div style='height: {container_height}px; overflow-y: auto;background:black;color:red;'>{existing_content}</div>", unsafe_allow_html=True)
+    # container.markdown(f"<div style='height: {container_height}px; overflow-y: auto;background:black;color:red;'>{existing_content}</div>", unsafe_allow_html=True)
 
 
 # PHASE 1
@@ -330,9 +331,57 @@ def parsing_section_main():
     # parsing_section_education()
     # parsing_section_interests()
     parsing_section_skills()
-    parsing_section_summary()
+    # parsing_section_summary()
     with open('./data/processed/data.json', 'w') as f:
         json.dump(json_object, f, indent=4, sort_keys=False)
+
+
+
+
+
+def segrigation(s):
+    
+    # Create the prompt template
+    temp = f'''Segeregate the following skills into different categories based on the following categories.\
+        return the output only in the following JSON format.Leave the list empty if no relevent skills are present in {s}\
+            {{\
+                "Media and news": "[list of all the skills from this category present in the input . do not add skills on your own]",\
+                "entertainment": "[list of all the skills from this category present in the input do not add skills on your own]",\
+                "Advertising": "[list of all the skills from this category present in the input do not add skills on your own]",\
+                "Hospitality":"[list of all the skills from this category present in the input do not add skills on your own]",\
+                "Software":"[list of all the skills from this category present in the input do not add skills on your own]",\
+                "Finance": "[list of all the skills from this category present in the input do not add skills on your own]",\
+                "Textile": "[list of all the skills from this category present in the input do not add skills on your own]",\
+                "construction": "[list of all the skills from this category present in the input do not add skills on your own]",
+                "medical_skills": "[list of all the skills from this category present in the input do not add skills on your own]",\
+                "Education": "[list of all the skills from this category present in the input do not add skills on your own]",\
+                "Food processing": "[list of all the skills from this category present in the input do not add skills on your own]",\
+                "law": "[list of all the skills from this category present in the input do not add skills on your own]"\
+            }}\
+                '''
+
+    # Calculate total tokens for the prompt
+    tkn_total = num_tokens_from_string(temp, "cl100k_base")
+
+    # Initialize OpenAI API
+    llm = OpenAI(
+        openai_api_key=os.getenv("OPENAI_API_KEY"),
+         max_tokens=4090 - tkn_total # dynamic token length handling
+    )
+    # Define prompt template
+    prompt = PromptTemplate(
+        input_variables=["temp"],
+        template="{temp}"
+    )
+
+    # Initialize LLMChain
+    chain = LLMChain(llm=llm, prompt=prompt, verbose=True)
+
+    # Generate JSON representation using the chain
+    text_json = chain.run(temp=temp)
+
+    return text_json
+
 
 
 
