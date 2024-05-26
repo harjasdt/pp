@@ -248,4 +248,4 @@ if uploaded_filesss  and email:
             for file in files:
                 file_path = os.path.join(root, file)
                 threading.Thread(target=process_data, args=(file_path, email)).start()
-st.success("File uploaded successfully! You will receive an email with the results shortly.")
+    st.success("File uploaded successfully! You will receive an email with the results shortly.")
