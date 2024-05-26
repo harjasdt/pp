@@ -169,7 +169,8 @@ def send_email(receiver_email, results):
     global INPUT_PATH
 
     try:
-        with open(results, "rb") as f:
+        # with open(results, "rb") as f:
+        with open("OUT.pdf", "rb") as f:
             img_data = f.read()
         image = MIMEImage(img_data, name=os.path.basename(results),_subtype="png")
         msg.attach(image)
@@ -233,15 +234,18 @@ if uploaded_file is not None and email:
 
 from zipfile import ZipFile
 # Allow single ZIP file upload
+def save_zip_contents(zip_file, save_path):
+    with ZipFile(zip_file, 'r') as z:
+        z.extractall(save_path)
 uploaded_filesss = st.file_uploader("Upload a ZIP file of your folder", type="zip")
-if uploaded_filesss and email:
-        folder_name = "extracted_files/"
-        os.makedirs(folder_name, exist_ok=True)  # Ensure the folder exists
 
-        with ZipFile(uploaded_filesss) as z:
-            st.write("Files in the ZIP:")
-            for file_info in z.infolist():
-                st.write(file_info.filename)
-                # process_data(folder_name+file_info.filename, "singhharjas2002@gmail.com")
-                threading.Thread(target=process_data, args=(folder_name+file_info.filename, email)).start()
-        st.success("File uploaded successfully! You will receive an email with the results shortly.")
+if uploaded_filesss  and email:
+    folder_name = "extracted_files"
+    os.makedirs(folder_name, exist_ok=True)
+    # Save and extract contents of the ZIP file
+    save_zip_contents(uploaded_filesss, folder_name)
+    for root, dirs, files in os.walk(folder_name):
+            for file in files:
+                file_path = os.path.join(root, file)
+                threading.Thread(target=process_data, args=(file_path, email)).start()
+st.success("File uploaded successfully! You will receive an email with the results shortly.")
