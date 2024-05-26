@@ -177,15 +177,15 @@ def send_email(receiver_email, results):
 
         
 
-        with open("Input_Resume.pdf", "rb") as f:
+        with open("./data/raw/test3.pdf", "rb") as f:
             img_data = f.read()
         image = MIMEImage(img_data, name="Input_Resume.pdf",_subtype="png")
         msg.attach(image)
 
-        with open('./data/processed/skills.txt', "rb") as f:
-            img_data = f.read()
-        image = MIMEImage(img_data, name="skills.txt",_subtype="png")
-        msg.attach(image)
+        # with open('./data/processed/skills.txt', "rb") as f:
+        #     img_data = f.read()
+        # image = MIMEImage(img_data, name="skills.txt",_subtype="png")
+        # msg.attach(image)
 
         with open('./data/processed/result.json', "rb") as f:
             img_data = f.read()
