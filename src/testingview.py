@@ -23,7 +23,7 @@ PASSWORD=os.getenv("PASSWORD")
 # st.set_page_config(page_title="Job Matcher Pro", page_icon=":briefcase:", layout="wide")
 
 # Set Title and Description
-st.title("Resume Pro")
+st.title("LLM-POWERED RESUME PARSING AND INFORMATION RETRIEVAL")
 
 # Apply some CSS to style the app
 

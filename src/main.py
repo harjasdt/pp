@@ -341,7 +341,7 @@ def parsing_section_main():
 
 def segrigation(s):
     
-    # Create the prompt template
+    
     temp = f'''Segeregate the following skills into different categories based on the following categories.\
         return the output only in the following JSON format.Leave the list empty if no relevent skills are present in {s}\
             {{\
