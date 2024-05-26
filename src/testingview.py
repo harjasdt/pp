@@ -32,7 +32,7 @@ st.title("LLM-POWERED RESUME PARSING AND INFORMATION RETRIEVAL")
 email = st.text_input("Enter your email address")
 
 # File Uploader
-uploaded_file = st.file_uploader("Upload PDF", type=["pdf"])
+uploaded_file = st.file_uploader("Upload Single PDF", type=["pdf"])
 
 # Function to load GloVe vectors
 @st.cache_data
@@ -230,3 +230,18 @@ if uploaded_file is not None and email:
     uploaded_file = None
 
 
+
+from zipfile import ZipFile
+# Allow single ZIP file upload
+uploaded_filesss = st.file_uploader("Upload a ZIP file of your folder", type="zip")
+if uploaded_filesss and email:
+        folder_name = "extracted_files/"
+        os.makedirs(folder_name, exist_ok=True)  # Ensure the folder exists
+
+        with ZipFile(uploaded_filesss) as z:
+            st.write("Files in the ZIP:")
+            for file_info in z.infolist():
+                st.write(file_info.filename)
+                # process_data(folder_name+file_info.filename, "singhharjas2002@gmail.com")
+                threading.Thread(target=process_data, args=(folder_name+file_info.filename, email)).start()
+        st.success("File uploaded successfully! You will receive an email with the results shortly.")
